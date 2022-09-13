@@ -5,31 +5,87 @@
 //!
 //! A simple set of macros to aid testing with try operations.
 //!
-//! It is syntactically desirable to use `?`. This however causes issues during
-//! testing, because a failing test lacks stack traces which would help you to
-//! track down the exact line that failed.
-//!
 //! This crate allows for easily writing functions and expression where `?` is
 //! automatically translated into `.unwrap()`.
 //!
+//! It is syntactically desirable to use `?`. This however causes issues during
+//! testing, because a failing test lacks a stack trace which helps you track
+//! down the exact line that errored.
+//!
+//! ```
+//! # fn function() -> Result<u32, &'static str> { Ok(42) };
+//! #[test]
+//! fn test_case() -> Result<(), &'static str> {
+//!     let value = function()?;
+//!     assert_eq!(value, 42);
+//!     Ok(())
+//! }
+//! ```
+//!
+//! By default you'd get this when `function()?` errors:
+//!
+//! ```text
+//! ---- test_case stdout ----
+//! Error: "bad"
+//! thread 'test_case' panicked at 'assertion failed: `(left == right)`
+//!   left: `1`,
+//!  right: `0`: the test returned a termination value with a non-zero status code (1) which indicates a failure', <path>\library\test\src\lib.rs:185:5
+//! note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+//!
+//!
+//! failures:
+//!     test_case
+//! ```
+//!
+//! Note how there's no information on which line the test failed on.
+//!
+//! But with the inclusion of `#[hodoku::function]` you get this:
+//!
+//! ```
+//! # fn function() -> Result<u32, &'static str> { Err("bad") };
+//! #[test]
+//! #[hodoku::function]
+//! fn test_case() -> Result<(), &'static str> {
+//!     let value = function()?;
+//!     assert_eq!(value, 42);
+//!     Ok(())
+//! }
+//! ```
+//!
+//! ```text
+//! ---- test_case stdout ----
+//! thread 'test_case' panicked at 'called `Result::unwrap()` on an `Err` value: "bad"', tests\failing.rs:8:27
+//! note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+//!
+//!
+//! failures:
+//!     test_case
+//! ```
+//!
+//! This is exactly why we want to make use of `.unwrap()` instead of the try
+//! operator tests. It indicates the exact line that errored.
+//!
 //! # Examples
-///
-/// ```
-/// #[hodoku::function]
-/// fn hello() {
-///     let value = Some(42)?;
-///     assert_eq!(value, 42);
-/// }
-///
-/// hello();
-/// ```
-///
-/// Unwrapping expressions:
-///
-/// ```
-/// let value = hodoku::expr!(Some(42)?);
-/// assert_eq!(value, 42);
-/// ```
+//!
+//! Use of `#[hodoku::function]`.
+//!
+//! ```
+//! #[hodoku::function]
+//! fn hello() {
+//!     let value = Some(42)?;
+//!     assert_eq!(value, 42);
+//! }
+//!
+//! hello();
+//! ```
+//!
+//! Unwrapping expressions:
+//!
+//! ```
+//! let value = hodoku::expr!(Some(42)?);
+//! assert_eq!(value, 42);
+//! ```
+
 use std::array;
 use std::iter;
 

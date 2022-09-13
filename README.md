@@ -7,13 +7,83 @@
 
 A simple set of macros to aid testing with try operations.
 
-It is syntactically desirable to use `?`. This however causes issues during
-testing, because a failing test lacks stack traces which would help you to
-track down the exact line that failed.
-
 This crate allows for easily writing functions and expression where `?` is
 automatically translated into `.unwrap()`.
 
+It is syntactically desirable to use `?`. This however causes issues during
+testing, because a failing test lacks a stack trace which helps you track
+down the exact line that errored.
+
+```rust
+#[test]
+fn test_case() -> Result<(), &'static str> {
+    let value = function()?;
+    assert_eq!(value, 42);
+    Ok(())
+}
+```
+
+By default you'd get this when `function()?` errors:
+
+```
+---- test_case stdout ----
+Error: "bad"
+thread 'test_case' panicked at 'assertion failed: `(left == right)`
+  left: `1`,
+ right: `0`: the test returned a termination value with a non-zero status code (1) which indicates a failure', <path>\library\test\src\lib.rs:185:5
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    test_case
+```
+
+Note how there's no information on which line the test failed on.
+
+But with the inclusion of `#[hodoku::function]` you get this:
+
+```rust
+#[test]
+#[hodoku::function]
+fn test_case() -> Result<(), &'static str> {
+    let value = function()?;
+    assert_eq!(value, 42);
+    Ok(())
+}
+```
+
+```
+---- test_case stdout ----
+thread 'test_case' panicked at 'called `Result::unwrap()` on an `Err` value: "bad"', tests\failing.rs:8:27
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    test_case
+```
+
+This is exactly why we want to make use of `.unwrap()` instead of the try
+operator tests. It indicates the exact line that errored.
+
 ## Examples
 
-License: MIT/Apache 2.0
+Use of `#[hodoku::function]`.
+
+```rust
+#[hodoku::function]
+fn hello() {
+    let value = Some(42)?;
+    assert_eq!(value, 42);
+}
+
+hello();
+```
+
+Unwrapping expressions:
+
+```rust
+let value = hodoku::expr!(Some(42)?);
+assert_eq!(value, 42);
+```
+
+License: MIT/Apache-2.0
