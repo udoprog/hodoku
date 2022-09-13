@@ -99,18 +99,20 @@ fn process(item: TokenStream) -> TokenStream {
             ))),
             TokenTree::Punct(punct) => {
                 if punct.as_char() == '?' {
+                    let mut group = Group::new(Delimiter::Parenthesis, TokenStream::default());
+                    group.set_span(punct.span());
+
                     tmp = Some(
                         [
                             TokenTree::Ident(Ident::new("unwrap", punct.span())),
-                            TokenTree::Group(Group::new(
-                                Delimiter::Parenthesis,
-                                TokenStream::default(),
-                            )),
+                            TokenTree::Group(group),
                         ]
                         .into_iter(),
                     );
 
-                    Some(TokenTree::Punct(Punct::new('.', Spacing::Joint)))
+                    let mut first = Punct::new('.', Spacing::Joint);
+                    first.set_span(punct.span());
+                    Some(TokenTree::Punct(first))
                 } else {
                     Some(TokenTree::Punct(punct))
                 }
