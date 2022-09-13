@@ -1,0 +1,16 @@
+[package]
+name = "hodoku"
+version = "0.1.0"
+edition = "2021"
+authors = ["John-John Tedro <udoprog@tedro.se>"]
+license = "MIT/Apache-2.0"
+repository = "https://github.com/udoprog/hodoku"
+homepage = "https://github.com/udoprog/hodoku"
+description = """
+A simple collection of macros to aid diagnostics during testing.
+"""
+categories = ["development-tools"]
+
+[lib]
+proc-macro = true
+path = "src/lib.rs"
