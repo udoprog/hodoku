@@ -37,8 +37,8 @@ use proc_macro::Spacing;
 use proc_macro::{Delimiter, Group, Ident, Punct, TokenStream, TokenTree};
 
 /// Process an expression or item marked with an attribute to modify any uses of
-/// the try operator `?` into trailing `.unwrap()`. So `expr!(Some(42)?)` will
-/// be translated to `Some(42).unwrap()`.
+/// the try operator `?` into trailing `.unwrap()`. So `Some(42)?` will be
+/// translated to `Some(42).unwrap()`.
 ///
 /// This is useful for adhoc testing.
 ///
