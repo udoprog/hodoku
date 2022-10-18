@@ -1,15 +1,16 @@
 [package]
 name = "hodoku"
 version = "0.1.3"
-edition = "2021"
 authors = ["John-John Tedro <udoprog@tedro.se>"]
-license = "MIT/Apache-2.0"
-repository = "https://github.com/udoprog/hodoku"
+edition = "2021"
+description = "A simple collection of macros to aid diagnostics during testing."
+documentation = "https://docs.rs/hodoku"
+readme = "README.md"
 homepage = "https://github.com/udoprog/hodoku"
-description = """
-A simple collection of macros to aid diagnostics during testing.
-"""
-categories = ["development-tools"]
+repository = "https://github.com/udoprog/hodoku"
+license = "MIT/Apache-2.0"
+keywords = ["testing", "no_std"]
+categories = ["no-std", "development-tools"]
 
 [lib]
 proc-macro = true

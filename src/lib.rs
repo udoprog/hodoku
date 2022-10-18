@@ -65,7 +65,9 @@
 //! This is exactly why we want to make use of `.unwrap()` instead of the try
 //! operator tests. It indicates the exact line that errored.
 //!
-//! # Examples
+//! <br>
+//!
+//! ## Examples
 //!
 //! Use of `#[hodoku::function]`.
 //!

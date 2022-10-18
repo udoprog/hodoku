@@ -25,7 +25,7 @@ fn test_case() -> Result<(), &'static str> {
 
 By default you'd get this when `function()?` errors:
 
-```
+```text
 ---- test_case stdout ----
 Error: "bad"
 thread 'test_case' panicked at 'assertion failed: `(left == right)`
@@ -52,7 +52,7 @@ fn test_case() -> Result<(), &'static str> {
 }
 ```
 
-```
+```text
 ---- test_case stdout ----
 thread 'test_case' panicked at 'called `Result::unwrap()` on an `Err` value: "bad"', tests\failing.rs:8:27
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
@@ -64,6 +64,8 @@ failures:
 
 This is exactly why we want to make use of `.unwrap()` instead of the try
 operator tests. It indicates the exact line that errored.
+
+<br>
 
 ## Examples
 
@@ -85,5 +87,3 @@ Unwrapping expressions:
 let value = hodoku::expr!(Some(42)?);
 assert_eq!(value, 42);
 ```
-
-License: MIT/Apache-2.0
