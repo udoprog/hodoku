@@ -112,7 +112,7 @@ use proc_macro::{Delimiter, Group, Ident, Punct, TokenStream, TokenTree};
 /// ```
 #[proc_macro_attribute]
 pub fn function(args: TokenStream, item: TokenStream) -> TokenStream {
-    if let Some(..) = args.into_iter().next() {
+    if args.into_iter().next().is_some() {
         panic!("#[hodoku::function]: takes not arguments")
     }
 
